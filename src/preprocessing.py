@@ -3,7 +3,7 @@ import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from src.config import (
     TARGET_COL, TARGET_LOG_COL, CATEGORICAL_COLS,
-    NUMERICAL_COLS, DROP_COLS, PROCESSED_DATA_PATH
+    NUMERICAL_COLS, DATE_COLS, DROP_COLS, PROCESSED_DATA_PATH
 )
 
 
@@ -26,6 +26,15 @@ def impute_missing(df: pd.DataFrame) -> pd.DataFrame:
 def encode_categoricals(df: pd.DataFrame) -> pd.DataFrame:
     cols_to_encode = [c for c in CATEGORICAL_COLS if c in df.columns and c != TARGET_COL]
     df = pd.get_dummies(df, columns=cols_to_encode, drop_first=True)
+    return df
+
+
+def parse_dates(df: pd.DataFrame) -> pd.DataFrame:
+    for col in DATE_COLS:
+        if col in df.columns:
+            df[col] = pd.to_datetime(df[col], errors="coerce")
+            df[col.replace(" ", "_") + "_Month"] = df[col].dt.month
+            df = df.drop(columns=[col])
     return df
 
 
@@ -55,6 +64,7 @@ def scale_features(X_train: pd.DataFrame, X_test: pd.DataFrame):
 
 def run_preprocessing(df: pd.DataFrame) -> pd.DataFrame:
     df = drop_unused(df)
+    df = parse_dates(df)
     df = impute_missing(df)
     df = engineer_features(df)
     df = encode_categoricals(df)

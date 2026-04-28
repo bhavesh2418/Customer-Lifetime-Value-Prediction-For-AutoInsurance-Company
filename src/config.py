@@ -11,7 +11,7 @@ REPORTS_DIR = ROOT_DIR / "reports"
 NOTEBOOKS_DIR = ROOT_DIR / "notebooks"
 
 # ── Dataset ──────────────────────────────────────────────────────────────────
-DATASET_FILENAME = "vehicle_insurance_customer_data.csv"
+DATASET_FILENAME = "AutoInsurance.csv"
 RAW_DATA_PATH = DATA_RAW_DIR / DATASET_FILENAME
 PROCESSED_DATA_PATH = DATA_PROCESSED_DIR / "processed_data.csv"
 
@@ -33,7 +33,8 @@ NUMERICAL_COLS = [
     "Number of Policies", "Total Claim Amount"
 ]
 
-DROP_COLS = ["Customer"]   # ID column -- no predictive value
+DATE_COLS = ["Effective To Date"]   # parsed to extract month number
+DROP_COLS = ["Customer"]            # ID column -- no predictive value
 
 # ── Model hyperparameters ─────────────────────────────────────────────────────
 RANDOM_STATE = 42
